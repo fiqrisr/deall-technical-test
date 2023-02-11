@@ -1,7 +1,7 @@
-import { Button } from "@mantine/core";
+import { Text } from "@mantine/core";
 
 const Index = () => {
-  return <Button>Click Me!</Button>;
+  return <Text>Resize app to see responsive navbar in action</Text>;
 };
 
 export default Index;
