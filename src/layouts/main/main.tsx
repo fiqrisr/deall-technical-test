@@ -1,7 +1,8 @@
 import { PropsWithChildren, useState } from "react";
-import { AppShell, Navbar, Footer, Text, useMantineTheme } from "@mantine/core";
+import { AppShell, useMantineTheme } from "@mantine/core";
 
-import { Header } from "@/components";
+import { Header, Navbar } from "@/components";
+import { NAV_ITEMS } from "@/configs";
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
@@ -18,21 +19,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         },
       }}
       navbarOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
-          <Text>Application navbar</Text>
-        </Navbar>
-      }
-      footer={
-        <Footer height={60} p="md">
-          Application footer
-        </Footer>
-      }
+      navbar={<Navbar navItems={NAV_ITEMS} hidden={!opened} />}
       header={<Header />}
     >
       {children}
