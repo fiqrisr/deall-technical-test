@@ -1,21 +1,31 @@
 import { useState } from "react";
-import { AppProps } from "next/app";
+import App, { type AppContext } from "next/app";
 import Head from "next/head";
 import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
 } from "@mantine/core";
+import { getCookie, setCookie } from "cookies-next";
 
 import { MainLayout } from "@/layouts";
 import { RouterTransition } from "@/components";
+import type { CustomAppProps } from "@/types";
 
-export default function App(props: AppProps) {
+const CustomApp = (props: CustomAppProps) => {
   const { Component, pageProps } = props;
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(
+    props.colorScheme
+  );
 
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  const toggleColorScheme = (value?: ColorScheme) => {
+    const nextColorScheme =
+      value || (colorScheme === "dark" ? "light" : "dark");
+    setColorScheme(nextColorScheme);
+    setCookie("mantine-color-scheme", nextColorScheme, {
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  };
 
   return (
     <>
@@ -44,4 +54,17 @@ export default function App(props: AppProps) {
       </ColorSchemeProvider>
     </>
   );
-}
+};
+
+CustomApp.getInitialProps = async (context: AppContext) => {
+  const appProps = await App.getInitialProps(context);
+  const colorScheme: ColorScheme =
+    (getCookie("mantine-color-scheme", context.ctx) as ColorScheme) || "light";
+
+  return {
+    ...appProps,
+    colorScheme,
+  };
+};
+
+export default CustomApp;
