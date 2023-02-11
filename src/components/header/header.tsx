@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Link from "next/link";
 import {
   ActionIcon,
@@ -13,9 +12,9 @@ import { IconSun, IconMoonStars } from "@tabler/icons-react";
 
 import { Logo } from "./logo";
 import { useHeaderStyles } from "./header.styles";
+import type { HeaderProps } from "./header.types";
 
-const Header = () => {
-  const [navbarOpened, setNavbarOpened] = useState(false);
+const Header = ({ navbarOpened, setNavbarOpened }: HeaderProps) => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { classes } = useHeaderStyles();
   const theme = useMantineTheme();

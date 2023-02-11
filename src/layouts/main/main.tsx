@@ -6,7 +6,7 @@ import { NAV_ITEMS } from "@/configs";
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
+  const [navbarOpened, setNavbarOpened] = useState(false);
 
   return (
     <AppShell
@@ -19,8 +19,10 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         },
       }}
       navbarOffsetBreakpoint="sm"
-      navbar={<Navbar navItems={NAV_ITEMS} hidden={!opened} />}
-      header={<Header />}
+      navbar={<Navbar navItems={NAV_ITEMS} hidden={!navbarOpened} />}
+      header={
+        <Header navbarOpened={navbarOpened} setNavbarOpened={setNavbarOpened} />
+      }
     >
       {children}
     </AppShell>

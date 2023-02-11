@@ -26,7 +26,7 @@ const Navbar = ({ navItems, hidden }: NavbarProps) => {
 
   return (
     <MantineNavbar
-      width={{ sm: 200, lg: 300 }}
+      width={{ sm: 250, lg: 300 }}
       p="md"
       hiddenBreakpoint="sm"
       hidden={hidden}
