@@ -7,7 +7,10 @@ import {
   ColorScheme,
 } from "@mantine/core";
 import { getCookie, setCookie } from "cookies-next";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+import { queryClient } from "@/configs";
 import { MainLayout } from "@/layouts";
 import { RouterTransition } from "@/components";
 import type { CustomAppProps } from "@/types";
@@ -37,21 +40,24 @@ const CustomApp = (props: CustomAppProps) => {
         />
       </Head>
 
-      <ColorSchemeProvider
-        colorScheme={colorScheme}
-        toggleColorScheme={toggleColorScheme}
-      >
-        <MantineProvider
-          theme={{ colorScheme }}
-          withGlobalStyles
-          withNormalizeCSS
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <ColorSchemeProvider
+          colorScheme={colorScheme}
+          toggleColorScheme={toggleColorScheme}
         >
-          <RouterTransition />
-          <MainLayout>
-            <Component {...pageProps} />
-          </MainLayout>
-        </MantineProvider>
-      </ColorSchemeProvider>
+          <MantineProvider
+            theme={{ colorScheme }}
+            withGlobalStyles
+            withNormalizeCSS
+          >
+            <RouterTransition />
+            <MainLayout>
+              <Component {...pageProps} />
+            </MainLayout>
+          </MantineProvider>
+        </ColorSchemeProvider>
+      </QueryClientProvider>
     </>
   );
 };
