@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState } from "react";
-import { AppShell, useMantineTheme } from "@mantine/core";
+import { AppShell, Container, useMantineTheme } from "@mantine/core";
 
 import { Header, Navbar } from "@/components";
 import { NAV_ITEMS } from "@/configs";
@@ -24,7 +24,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         <Header navbarOpened={navbarOpened} setNavbarOpened={setNavbarOpened} />
       }
     >
-      {children}
+      <Container size="xl">{children}</Container>
     </AppShell>
   );
 };
