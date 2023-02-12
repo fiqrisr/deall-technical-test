@@ -24,7 +24,9 @@ const MainLayout = ({ children }: PropsWithChildren) => {
         <Header navbarOpened={navbarOpened} setNavbarOpened={setNavbarOpened} />
       }
     >
-      <Container size="xl">{children}</Container>
+      <Container size="xl" mt="md">
+        {children}
+      </Container>
     </AppShell>
   );
 };

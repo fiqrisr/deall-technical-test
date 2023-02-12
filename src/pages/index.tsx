@@ -1,7 +1,7 @@
 import { Text } from "@mantine/core";
 
 const Index = () => {
-  return <Text>Resize app to see responsive navbar in action</Text>;
+  return <Text>Dashboard</Text>;
 };
 
 export default Index;
