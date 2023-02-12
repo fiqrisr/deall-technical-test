@@ -1,18 +1,22 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Navbar as MantineNavbar } from "@mantine/core";
 import { IconLogout, IconSwitchHorizontal } from "@tabler/icons-react";
 
+import { checkIsActive } from "@/utils/router-helper";
 import type { NavItem } from "@/types";
 
 import { useStyles } from "./navbar.styles";
 import type { NavbarProps } from "./navbar.types";
 
-const NavItem = (props: NavItem & { active?: boolean }) => {
+const NavItem = (props: NavItem) => {
   const { classes, cx } = useStyles();
+  const { pathname } = useRouter();
+  const isActive = checkIsActive(pathname, props.link);
 
   return (
     <Link
-      className={cx(classes.link, props.active && classes.linkActive)}
+      className={cx(classes.link, isActive && classes.linkActive)}
       href={props.link}
     >
       <props.icon className={classes.linkIcon} stroke={1.5} />
