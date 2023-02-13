@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { usePagination, useSearch } from "@/hooks";
@@ -6,7 +6,15 @@ import { Product } from "@/types";
 
 import { getProducts } from "../services/products-services";
 
-export const useProducts = () => {
+type useProductsArgs = {
+  filteredBrands: string[];
+  filteredCategories: string[];
+};
+
+export const useProducts = ({
+  filteredBrands,
+  filteredCategories,
+}: useProductsArgs) => {
   const { limit, skip, page, setPage, setLimit } = usePagination();
 
   const { data: initialData, isLoading } = useQuery(["products"], () =>
@@ -17,12 +25,52 @@ export const useProducts = () => {
   const [totalRecords, setTotalRecords] = useState(initialData?.total || 0);
   const [searchQuery, setSearchQuery] = useSearch("");
 
-  const searchProducts = useCallback(
-    (search: string) => {
+  const categoryList = useMemo(() => {
+    if (initialData) {
+      return [...new Set(initialData.products.map((p) => p.category))];
+    }
+
+    return [];
+  }, [initialData]);
+
+  const brandList = useMemo(() => {
+    if (initialData) {
+      return [...new Set(initialData.products.map((p) => p.brand))];
+    }
+
+    return [];
+  }, [initialData]);
+
+  const filterProducts = useCallback(
+    ({
+      search,
+      brands,
+      categories,
+    }: {
+      search: string;
+      brands: string[];
+      categories: string[];
+    }) => {
       if (initialData) {
-        return initialData.products.filter((product) =>
+        let filteredProducts = [];
+
+        filteredProducts = initialData.products.filter((product) =>
           product.title.toLowerCase().includes(search)
         );
+
+        if (brands.length > 0 && brands[0] !== "") {
+          filteredProducts = filteredProducts.filter((product) =>
+            brands.includes(product.brand)
+          );
+        }
+
+        if (categories.length > 0 && categories[0] !== "") {
+          filteredProducts = filteredProducts.filter((product) =>
+            categories.includes(product.category)
+          );
+        }
+
+        return filteredProducts;
       }
 
       return [];
@@ -39,11 +87,25 @@ export const useProducts = () => {
 
   useEffect(() => {
     if (initialData) {
-      const filteredProducts = searchProducts(searchQuery);
+      const filteredProducts = filterProducts({
+        search: searchQuery,
+        brands: filteredBrands,
+        categories: filteredCategories,
+      });
+
       setRecords(filteredProducts.slice(skip, limit * page));
       setTotalRecords(filteredProducts.length);
     }
-  }, [initialData, searchQuery, limit, skip, page, searchProducts]);
+  }, [
+    initialData,
+    searchQuery,
+    filteredBrands,
+    filteredCategories,
+    limit,
+    skip,
+    page,
+    filterProducts,
+  ]);
 
   useEffect(() => {
     setPage(1);
@@ -60,5 +122,7 @@ export const useProducts = () => {
     setPage,
     setLimit,
     setSearchQuery,
+    brandList,
+    categoryList,
   };
 };

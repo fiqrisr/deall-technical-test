@@ -1,13 +1,23 @@
 import Head from "next/head";
-import { Title, Image, TextInput, MediaQuery } from "@mantine/core";
+import {
+  Title,
+  Image,
+  TextInput,
+  MediaQuery,
+  Popover,
+  Button,
+  Flex,
+} from "@mantine/core";
 import { DataTable, DataTableColumn } from "mantine-datatable";
-import { IconSearch } from "@tabler/icons-react";
+import { IconFilter, IconSearch } from "@tabler/icons-react";
 
 import { RECORD_PER_PAGE } from "@/configs";
 import { renderBreadcrumbs } from "@/utils/render-breadcrumbs";
 import { Product, BreadcrumbItem } from "@/types";
 
+import { ProductFilters } from "../components/product-filters";
 import { useProducts } from "../hooks/use-products";
+import { useProductFilters } from "../hooks/use-product-filters";
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -40,6 +50,8 @@ const productsTableColumns: DataTableColumn<Product>[] = [
 ];
 
 export const ProductListPage = () => {
+  const filtersState = useProductFilters();
+
   const {
     data,
     total,
@@ -50,7 +62,12 @@ export const ProductListPage = () => {
     setPage,
     setLimit,
     setSearchQuery,
-  } = useProducts();
+    brandList,
+    categoryList,
+  } = useProducts({
+    filteredBrands: filtersState.filteredBrands || [],
+    filteredCategories: filtersState.filteredCategories || [],
+  });
 
   return (
     <>
@@ -64,16 +81,30 @@ export const ProductListPage = () => {
 
       {renderBreadcrumbs(breadcrumbs)}
 
-      <MediaQuery smallerThan="xs" styles={{ width: "100%" }}>
-        <TextInput
-          icon={<IconSearch size={14} />}
-          sx={{ width: 200 }}
-          mb="md"
-          defaultValue={searchQuery}
-          placeholder="Search..."
-          onChange={(e) => setSearchQuery(e.currentTarget.value)}
-        />
-      </MediaQuery>
+      <Flex justify="space-between" align="center" gap="md" mb="md">
+        <MediaQuery smallerThan="xs" styles={{ width: "100%" }}>
+          <TextInput
+            icon={<IconSearch size={14} />}
+            sx={{ width: 200 }}
+            defaultValue={searchQuery}
+            placeholder="Search..."
+            onChange={(e) => setSearchQuery(e.currentTarget.value)}
+          />
+        </MediaQuery>
+
+        <Popover position="bottom-end">
+          <Popover.Target>
+            <Button leftIcon={<IconFilter size={18} />}>Filters</Button>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <ProductFilters
+              brandList={brandList}
+              categoryList={categoryList}
+              {...filtersState}
+            />
+          </Popover.Dropdown>
+        </Popover>
+      </Flex>
 
       <DataTable<Product>
         columns={productsTableColumns}
@@ -89,7 +120,7 @@ export const ProductListPage = () => {
         horizontalSpacing="xl"
         verticalSpacing="md"
         fetching={isLoading}
-        minHeight={250}
+        minHeight={total > 0 ? 0 : 250}
       />
     </>
   );
