@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
 import Head from "next/head";
-import { Title, Image } from "@mantine/core";
+import { Title, Image, TextInput, MediaQuery } from "@mantine/core";
 import { DataTable, DataTableColumn } from "mantine-datatable";
+import { IconSearch } from "@tabler/icons-react";
 
 import { RECORD_PER_PAGE } from "@/configs";
-import { usePagination } from "@/hooks";
 import { renderBreadcrumbs } from "@/utils/render-breadcrumbs";
 import { Product, BreadcrumbItem } from "@/types";
 
-import { useGetProducts } from "../hooks/use-get-products";
+import { useProducts } from "../hooks/use-products";
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -27,12 +26,13 @@ const productsTableColumns: DataTableColumn<Product>[] = [
       <Image src={thumbnail} alt={title} width={40} />
     ),
   },
-  { accessor: "title", title: "Product Name" },
-  { accessor: "brand", title: "Brand" },
-  { accessor: "category", title: "Category" },
+  { accessor: "title", title: "Product Name", sortable: true },
+  { accessor: "brand", title: "Brand", sortable: true },
+  { accessor: "category", title: "Category", sortable: true },
   {
     accessor: "price",
     textAlignment: "right",
+    sortable: true,
     render: ({ price }) =>
       price.toLocaleString("en-US", { style: "currency", currency: "USD" }),
   },
@@ -40,13 +40,17 @@ const productsTableColumns: DataTableColumn<Product>[] = [
 ];
 
 export const ProductListPage = () => {
-  const { limit, skip, page, setPage, setLimit } = usePagination();
-  const { data, isLoading } = useGetProducts({ limit: 0, skip: 0 });
-  const [records, setRecords] = useState<Product[]>([]);
-
-  useEffect(() => {
-    if (data) setRecords(data.products.slice(skip, limit * page));
-  }, [data, limit, skip, page]);
+  const {
+    data,
+    total,
+    isLoading,
+    limit,
+    page,
+    searchQuery,
+    setPage,
+    setLimit,
+    setSearchQuery,
+  } = useProducts();
 
   return (
     <>
@@ -60,10 +64,21 @@ export const ProductListPage = () => {
 
       {renderBreadcrumbs(breadcrumbs)}
 
+      <MediaQuery smallerThan="xs" styles={{ width: "100%" }}>
+        <TextInput
+          icon={<IconSearch size={14} />}
+          sx={{ width: 200 }}
+          mb="md"
+          defaultValue={searchQuery}
+          placeholder="Search..."
+          onChange={(e) => setSearchQuery(e.currentTarget.value)}
+        />
+      </MediaQuery>
+
       <DataTable<Product>
         columns={productsTableColumns}
-        records={records}
-        totalRecords={data?.total || 0}
+        records={data}
+        totalRecords={total}
         recordsPerPage={limit}
         page={page}
         onPageChange={(p) => setPage(p)}
