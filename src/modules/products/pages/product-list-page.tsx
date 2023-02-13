@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Title, Image } from "@mantine/core";
 import { DataTable, DataTableColumn } from "mantine-datatable";
@@ -40,7 +41,12 @@ const productsTableColumns: DataTableColumn<Product>[] = [
 
 export const ProductListPage = () => {
   const { limit, skip, page, setPage, setLimit } = usePagination();
-  const { data, isLoading } = useGetProducts({ limit, skip });
+  const { data, isLoading } = useGetProducts({ limit: 0, skip: 0 });
+  const [records, setRecords] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (data) setRecords(data.products.slice(skip, limit * page));
+  }, [data, limit, skip, page]);
 
   return (
     <>
@@ -56,7 +62,7 @@ export const ProductListPage = () => {
 
       <DataTable<Product>
         columns={productsTableColumns}
-        records={data?.products}
+        records={records}
         totalRecords={data?.total || 0}
         recordsPerPage={limit}
         page={page}
