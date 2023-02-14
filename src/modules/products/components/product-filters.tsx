@@ -10,16 +10,21 @@ import {
   Input,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { SerializersWithDefaultFactory, SetValues } from "next-usequerystate";
+import { Serializers, SetValues } from "next-usequerystate";
+import { IconCurrencyDollar } from "@tabler/icons-react";
 
 type ProductFiltersProps = {
   brandList: string[];
   categoryList: string[];
   filteredBrands: string[] | null;
   filteredCategories: string[] | null;
+  minPrice: number;
+  maxPrice: number;
   setFilterList: SetValues<{
-    brand: SerializersWithDefaultFactory<string[]>;
-    category: SerializersWithDefaultFactory<string[]>;
+    brand: Serializers<string[]>;
+    category: Serializers<string[]>;
+    minPrice: Serializers<number>;
+    maxPrice: Serializers<number>;
   }>;
 };
 
@@ -28,12 +33,16 @@ export const ProductFilters = ({
   categoryList,
   filteredBrands,
   filteredCategories,
+  minPrice,
+  maxPrice,
   setFilterList,
 }: ProductFiltersProps) => {
   const filtersForm = useForm({
     initialValues: {
       brands: filteredBrands || [],
       categories: filteredCategories || [],
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || 0,
     },
   });
 
@@ -43,11 +52,23 @@ export const ProductFilters = ({
         await setFilterList({
           brand: values.brands,
           category: values.categories,
+          minPrice: values.minPrice,
+          maxPrice: values.maxPrice,
         });
       })}
       onReset={async () => {
-        await setFilterList({ brand: [], category: [] });
-        filtersForm.setValues({ brands: [], categories: [] });
+        await setFilterList({
+          brand: [],
+          category: [],
+          minPrice: 0,
+          maxPrice: 0,
+        });
+        filtersForm.setValues({
+          brands: [],
+          categories: [],
+          minPrice: 0,
+          maxPrice: 0,
+        });
       }}
       style={{ maxWidth: 280 }}
     >
@@ -68,9 +89,17 @@ export const ProductFilters = ({
 
         <Input.Wrapper label="Price">
           <Flex gap="md" align="center" justify="space-between" wrap="nowrap">
-            <NumberInput />
+            <NumberInput
+              {...filtersForm.getInputProps("minPrice")}
+              min={0}
+              icon={<IconCurrencyDollar size={16} />}
+            />
             <span>—</span>
-            <NumberInput />
+            <NumberInput
+              {...filtersForm.getInputProps("maxPrice")}
+              min={0}
+              icon={<IconCurrencyDollar size={16} />}
+            />
           </Flex>
         </Input.Wrapper>
       </Stack>

@@ -9,11 +9,15 @@ import { getProducts } from "../services/products-services";
 type useProductsArgs = {
   filteredBrands: string[];
   filteredCategories: string[];
+  minPrice: number;
+  maxPrice: number;
 };
 
 export const useProducts = ({
   filteredBrands = [],
   filteredCategories = [],
+  minPrice,
+  maxPrice,
 }: useProductsArgs) => {
   const { limit, skip, page, setPage, setLimit } = usePagination();
 
@@ -46,10 +50,12 @@ export const useProducts = ({
       search,
       brands,
       categories,
+      priceRange,
     }: {
       search: string;
       brands: string[];
       categories: string[];
+      priceRange: [number, number];
     }) => {
       if (initialData) {
         let filteredProducts = [];
@@ -67,6 +73,13 @@ export const useProducts = ({
         if (categories.length > 0 && categories[0] !== "") {
           filteredProducts = filteredProducts.filter((product) =>
             categories.includes(product.category)
+          );
+        }
+
+        if (priceRange[0] >= 0 && priceRange[1] > 0) {
+          filteredProducts = filteredProducts.filter(
+            (product) =>
+              product.price >= priceRange[0] && product.price <= priceRange[1]
           );
         }
 
@@ -91,6 +104,7 @@ export const useProducts = ({
         search: searchQuery,
         brands: filteredBrands,
         categories: filteredCategories,
+        priceRange: [minPrice, maxPrice],
       });
 
       setRecords(filteredProducts.slice(skip, limit * page));
@@ -101,6 +115,8 @@ export const useProducts = ({
     searchQuery,
     filteredBrands,
     filteredCategories,
+    minPrice,
+    maxPrice,
     limit,
     skip,
     page,

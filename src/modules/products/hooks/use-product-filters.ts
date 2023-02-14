@@ -1,27 +1,21 @@
-import { queryTypes, useQueryState, useQueryStates } from "next-usequerystate";
+import { queryTypes, useQueryStates } from "next-usequerystate";
 
 export const useProductFilters = () => {
   const [filterList, setFilterList] = useQueryStates(
     {
       brand: queryTypes.array(queryTypes.string).withDefault([]),
       category: queryTypes.array(queryTypes.string).withDefault([]),
+      minPrice: queryTypes.integer.withDefault(0),
+      maxPrice: queryTypes.integer.withDefault(0),
     },
     { history: "push" }
   );
 
-  // const [filteredBrands, setFilteredBrands] = useQueryState(
-  //   "brand",
-  //   queryTypes.array(queryTypes.string)
-  // );
-
-  // const [filteredCategories, setFilteredCategories] = useQueryState(
-  //   "category",
-  //   queryTypes.array(queryTypes.string)
-  // );
-
   return {
     filteredBrands: filterList.brand,
     filteredCategories: filterList.category,
+    minPrice: filterList.minPrice,
+    maxPrice: filterList.maxPrice,
     setFilterList,
   };
 };

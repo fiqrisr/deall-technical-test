@@ -67,6 +67,8 @@ export const ProductListPage = () => {
   } = useProducts({
     filteredBrands: filtersState.filteredBrands || [],
     filteredCategories: filtersState.filteredCategories || [],
+    minPrice: filtersState.minPrice,
+    maxPrice: filtersState.maxPrice,
   });
 
   return (
