@@ -12,8 +12,8 @@ type useProductsArgs = {
 };
 
 export const useProducts = ({
-  filteredBrands,
-  filteredCategories,
+  filteredBrands = [],
+  filteredCategories = [],
 }: useProductsArgs) => {
   const { limit, skip, page, setPage, setLimit } = usePagination();
 

@@ -1,20 +1,27 @@
-import { queryTypes, useQueryState } from "next-usequerystate";
+import { queryTypes, useQueryState, useQueryStates } from "next-usequerystate";
 
 export const useProductFilters = () => {
-  const [filteredBrands, setFilteredBrands] = useQueryState(
-    "brand",
-    queryTypes.array(queryTypes.string)
+  const [filterList, setFilterList] = useQueryStates(
+    {
+      brand: queryTypes.array(queryTypes.string).withDefault([]),
+      category: queryTypes.array(queryTypes.string).withDefault([]),
+    },
+    { history: "push" }
   );
 
-  const [filteredCategories, setFilteredCategories] = useQueryState(
-    "category",
-    queryTypes.array(queryTypes.string)
-  );
+  // const [filteredBrands, setFilteredBrands] = useQueryState(
+  //   "brand",
+  //   queryTypes.array(queryTypes.string)
+  // );
+
+  // const [filteredCategories, setFilteredCategories] = useQueryState(
+  //   "category",
+  //   queryTypes.array(queryTypes.string)
+  // );
 
   return {
-    filteredBrands,
-    filteredCategories,
-    setFilteredBrands,
-    setFilteredCategories,
+    filteredBrands: filterList.brand,
+    filteredCategories: filterList.category,
+    setFilterList,
   };
 };
