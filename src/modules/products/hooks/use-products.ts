@@ -19,7 +19,7 @@ export const useProducts = ({
   minPrice,
   maxPrice,
 }: useProductsArgs) => {
-  const { limit, skip, page, setPage, setLimit } = usePagination();
+  const { limit, skip, page, setPaginationState } = usePagination();
 
   const { data: initialData, isLoading } = useQuery(["products"], () =>
     getProducts({ limit: 0, skip: 0 })
@@ -46,7 +46,7 @@ export const useProducts = ({
   }, [initialData]);
 
   useEffect(() => {
-    if (!page) setPage(1);
+    if (!page) setPaginationState({ page: 1 });
     // trunk-ignore(eslint/react-hooks/exhaustive-deps)
   }, [totalRecords, page]);
 
@@ -135,8 +135,7 @@ export const useProducts = ({
     limit,
     page,
     searchQuery,
-    setPage,
-    setLimit,
+    setPaginationState,
     setSearchQuery,
     brandList,
     categoryList,

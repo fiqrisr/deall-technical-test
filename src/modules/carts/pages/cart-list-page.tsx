@@ -71,7 +71,8 @@ const cartsTableColumns: DataTableColumn<Cart>[] = [
 ];
 
 export const CartListPage = () => {
-  const { data, total, isLoading, limit, page, setPage, setLimit } = useCarts();
+  const { data, total, isLoading, limit, page, setPaginationState } =
+    useCarts();
 
   return (
     <>
@@ -91,9 +92,9 @@ export const CartListPage = () => {
         totalRecords={total}
         recordsPerPage={limit}
         page={page}
-        onPageChange={(p) => setPage(p)}
+        onPageChange={(p) => setPaginationState({ page: p })}
         recordsPerPageOptions={RECORD_PER_PAGE}
-        onRecordsPerPageChange={setLimit}
+        onRecordsPerPageChange={(v) => setPaginationState({ limit: v })}
         withBorder
         borderRadius="md"
         horizontalSpacing="xl"

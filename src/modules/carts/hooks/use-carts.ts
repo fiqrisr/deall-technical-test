@@ -7,7 +7,7 @@ import { Cart, CartProduct } from "@/types";
 import { getCarts, getOneCart } from "../services/carts-services";
 
 export const useCarts = () => {
-  const { limit, skip, page, setPage, setLimit } = usePagination();
+  const { limit, skip, page, setPaginationState } = usePagination();
 
   const { data: initialData, isLoading } = useQuery(["carts"], () =>
     getCarts({ limit: 0, skip: 0 })
@@ -29,8 +29,7 @@ export const useCarts = () => {
     isLoading,
     limit,
     page,
-    setPage,
-    setLimit,
+    setPaginationState,
   };
 };
 

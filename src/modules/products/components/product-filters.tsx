@@ -26,6 +26,10 @@ type ProductFiltersProps = {
     minPrice: Serializers<number>;
     maxPrice: Serializers<number>;
   }>;
+  setPaginationState: SetValues<{
+    page: Serializers<number>;
+    limit: Serializers<number>;
+  }>;
 };
 
 export const ProductFilters = ({
@@ -36,6 +40,7 @@ export const ProductFilters = ({
   minPrice,
   maxPrice,
   setFilterList,
+  setPaginationState,
 }: ProductFiltersProps) => {
   const filtersForm = useForm({
     initialValues: {
@@ -55,6 +60,7 @@ export const ProductFilters = ({
           minPrice: values.minPrice,
           maxPrice: values.maxPrice,
         });
+        setPaginationState({ page: 1 });
       })}
       onReset={async () => {
         await setFilterList({
@@ -69,6 +75,7 @@ export const ProductFilters = ({
           minPrice: 0,
           maxPrice: 0,
         });
+        setPaginationState({ page: 1 });
       }}
       style={{ maxWidth: 280 }}
     >
