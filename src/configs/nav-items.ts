@@ -8,7 +8,7 @@ import type { NavItem } from "@/types";
 
 export const NAV_ITEMS: NavItem[] = [
   {
-    link: "/",
+    link: "/dashboard",
     label: "Dashboard",
     icon: IconLayoutDashboard,
   },
