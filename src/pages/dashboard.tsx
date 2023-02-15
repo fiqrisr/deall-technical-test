@@ -1,7 +1,7 @@
-import { Text } from "@mantine/core";
+import { DashboardPage } from "@/modules/dashboard";
 
-const Index = () => {
-  return <Text>Dashboard</Text>;
+const Dashboard = () => {
+  return <DashboardPage />;
 };
 
-export default Index;
+export default Dashboard;
