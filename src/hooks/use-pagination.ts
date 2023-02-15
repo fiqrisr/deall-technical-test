@@ -26,16 +26,7 @@ export const usePagination = () => {
     page,
     limit: limitState,
     skip,
-    setPage: (value: number) =>
-      setPaginationQueryState(
-        { page: value },
-        { scroll: false, shallow: true }
-      ),
-    setLimit: (value: number) =>
-      setPaginationQueryState(
-        { limit: value, page: 1 },
-        { scroll: false, shallow: true }
-      ),
+    setPaginationState: setPaginationQueryState,
     setSkip,
   };
 };

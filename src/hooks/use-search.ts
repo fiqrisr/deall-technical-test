@@ -1,9 +1,12 @@
 import { useDebouncedState } from "@mantine/hooks";
-import { useQueryState } from "next-usequerystate";
+import { queryTypes, useQueryState } from "next-usequerystate";
 import { useEffect } from "react";
 
 export const useSearch = (value: string): [string, (v: string) => void] => {
-  const [query, setQuery] = useQueryState("search");
+  const [query, setQuery] = useQueryState(
+    "search",
+    queryTypes.string.withDefault("")
+  );
   const [debouncedValue, setDebouncedValue] = useDebouncedState(
     query || value,
     250
@@ -13,5 +16,5 @@ export const useSearch = (value: string): [string, (v: string) => void] => {
     setQuery(debouncedValue);
   }, [debouncedValue, setQuery]);
 
-  return [debouncedValue, setDebouncedValue];
+  return [query, setDebouncedValue];
 };

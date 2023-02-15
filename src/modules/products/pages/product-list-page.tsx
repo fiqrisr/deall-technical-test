@@ -1,3 +1,4 @@
+import { useEffect, useCallback } from "react";
 import Head from "next/head";
 import {
   Title,
@@ -59,8 +60,7 @@ export const ProductListPage = () => {
     limit,
     page,
     searchQuery,
-    setPage,
-    setLimit,
+    setPaginationState,
     setSearchQuery,
     brandList,
     categoryList,
@@ -70,6 +70,11 @@ export const ProductListPage = () => {
     minPrice: filtersState.minPrice,
     maxPrice: filtersState.maxPrice,
   });
+
+  useEffect(() => {
+    setPaginationState({ page: 1 });
+    // trunk-ignore(eslint/react-hooks/exhaustive-deps)
+  }, [searchQuery]);
 
   return (
     <>
@@ -102,6 +107,7 @@ export const ProductListPage = () => {
             <ProductFilters
               brandList={brandList}
               categoryList={categoryList}
+              setPaginationState={setPaginationState}
               {...filtersState}
             />
           </Popover.Dropdown>
@@ -114,9 +120,9 @@ export const ProductListPage = () => {
         totalRecords={total}
         recordsPerPage={limit}
         page={page}
-        onPageChange={(p) => setPage(p)}
+        onPageChange={(p) => setPaginationState({ page: p })}
         recordsPerPageOptions={RECORD_PER_PAGE}
-        onRecordsPerPageChange={setLimit}
+        onRecordsPerPageChange={(v) => setPaginationState({ limit: v })}
         withBorder
         borderRadius="md"
         horizontalSpacing="xl"
