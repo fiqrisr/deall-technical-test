@@ -45,6 +45,11 @@ export const useProducts = ({
     return [];
   }, [initialData]);
 
+  useEffect(() => {
+    if (!page) setPage(1);
+    // trunk-ignore(eslint/react-hooks/exhaustive-deps)
+  }, [totalRecords, page]);
+
   const filterProducts = useCallback(
     ({
       search,
@@ -122,11 +127,6 @@ export const useProducts = ({
     page,
     filterProducts,
   ]);
-
-  useEffect(() => {
-    setPage(1);
-    // trunk-ignore(eslint/react-hooks/exhaustive-deps)
-  }, [totalRecords]);
 
   return {
     data: records,
