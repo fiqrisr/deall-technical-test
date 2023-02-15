@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePagination, useSearch } from "@/hooks";
 import { Product } from "@/types";
 
-import { getProducts } from "../services/products-services";
+import { getProducts } from "@/services";
 
 type useProductsArgs = {
   filteredBrands: string[];
