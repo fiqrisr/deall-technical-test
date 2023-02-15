@@ -24,10 +24,8 @@ ChartJS.register(
 const options = {
   indexAxis: "y" as const,
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
-    legend: {
-      position: "right" as const,
-    },
     title: {
       display: true,
       text: "Brand",
@@ -52,7 +50,7 @@ export const BrandChart = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <div style={{ position: "relative", marginBottom: "36px" }}>
       <LoadingOverlay visible={isLoading} />
-      <Bar options={options} data={data} />
+      <Bar options={options} data={data} height={1200} />
     </div>
   );
 };
